@@ -48,9 +48,15 @@ class MainActivity:ComponentActivity(){
     TextButton(onClick=onBack){Text("Back")}
 }
 @Composable private fun SettingsScreen(vm:ScriptViewModel,onBack:()->Unit){
-    var key by remember{mutableStateOf(vm.apiKey)};var millis by remember{mutableStateOf(vm.millis)}
+    var key by remember{mutableStateOf(vm.apiKey)};var millis by remember{mutableStateOf(vm.millis)};var mode by remember{mutableStateOf(vm.languageMode)}
     Text("Settings",style=MaterialTheme.typography.headlineSmall)
     OutlinedTextField(key,{key=it},label={Text("OpenAI API key")},modifier=Modifier.fillMaxWidth(),singleLine=true)
+    Text("Language mode")
+    Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
+        FilterChip(selected=mode=="auto",onClick={mode="auto"},label={Text("Auto")})
+        FilterChip(selected=mode=="hi",onClick={mode="hi"},label={Text("Hindi")})
+        FilterChip(selected=mode=="en",onClick={mode="en"},label={Text("English")})
+    }
     Row{Text("Timestamp milliseconds");Spacer(Modifier.weight(1f));Switch(millis,{millis=it})}
-    Button(onClick={vm.setApiKey(key);vm.setMillis(millis);onBack()},modifier=Modifier.fillMaxWidth()){Text("Save")}
+    Button(onClick={vm.setApiKey(key);vm.setMillis(millis);vm.setLanguageMode(mode);onBack()},modifier=Modifier.fillMaxWidth()){Text("Save")}
 }
