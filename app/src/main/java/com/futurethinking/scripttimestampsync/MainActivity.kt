@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +20,7 @@ class MainActivity:ComponentActivity(){
     private val vm by viewModels<ScriptViewModel>()
     override fun onCreate(savedInstanceState:Bundle?){super.onCreate(savedInstanceState);setContent{App(vm)}}
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable fun App(vm:ScriptViewModel){
     var screen by remember{mutableStateOf("home")};var exportMode by remember{mutableStateOf("txt")}
     val pdf by vm.pdf.collectAsState();val audio by vm.audio.collectAsState();val lines by vm.lines.collectAsState();val busy by vm.busy.collectAsState();val progress by vm.progress.collectAsState();val error by vm.error.collectAsState()
