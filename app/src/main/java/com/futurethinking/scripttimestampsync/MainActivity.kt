@@ -45,7 +45,7 @@ class MainActivity:ComponentActivity(){
     Text("Result",style=MaterialTheme.typography.headlineSmall)
     Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){Button(onClick={export("txt","script_timestamp_sync.txt")}){Text("TXT")};Button(onClick={export("srt","script_timestamp_sync.srt")}){Text("SRT")};Button(onClick={export("csv","script_timestamp_sync.csv")}){Text("CSV")}}
     LazyColumn(Modifier.weight(1f)){itemsIndexed(lines){i,l->Card(Modifier.fillMaxWidth().padding(vertical=4.dp)){Column(Modifier.padding(12.dp)){Text("${i+1}. ${l.text}");Text("[${com.futurethinking.scripttimestampsync.util.Timestamp.format(l.startMs,vm.millis)}]  confidence ${"%.0f".format(l.confidence*100)}%");if(l.needsReview)Text("Needs Review",color=MaterialTheme.colorScheme.error)}}}}
-    TextButton(onClick=onBack){Text("Back")};TextButton(onClick={vm.setPdf(vm.pdf.value!!);}){ }
+    TextButton(onClick=onBack){Text("Back")}
 }
 @Composable private fun SettingsScreen(vm:ScriptViewModel,onBack:()->Unit){
     var key by remember{mutableStateOf(vm.apiKey)};var millis by remember{mutableStateOf(vm.millis)}
