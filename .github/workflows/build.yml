@@ -22,6 +22,8 @@ jobs:
           gradle-version: '8.11.1'
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+      - name: Install required Android SDK packages
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
       - name: Accept licenses
         run: yes | sdkmanager --licenses >/dev/null || true
       - name: Generate bundled 100k+ dictionary
@@ -32,15 +34,22 @@ jobs:
         run: gradle --no-daemon --stacktrace clean test assembleDebug
       - name: Build release APK
         run: gradle --no-daemon --stacktrace assembleRelease
+      - name: Sign release APK
+        run: |
+          keytool -genkeypair -v -keystore release-key.jks -storepass android -keypass android -alias release -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Script Timestamp Sync"
+          $ANDROID_HOME/build-tools/35.0.0/apksigner sign --ks release-key.jks --ks-pass pass:android --key-pass pass:android app/build/outputs/apk/release/app-release-unsigned.apk
+          mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/script-timestamp-sync-release.apk
+          $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose app/build/outputs/apk/release/script-timestamp-sync-release.apk
       - name: Verify APKs
         run: |
           test -s app/build/outputs/apk/debug/app-debug.apk
-          test -s app/build/outputs/apk/release/app-release-unsigned.apk
+          test -s app/build/outputs/apk/release/script-timestamp-sync-release.apk
           $ANDROID_HOME/build-tools/35.0.0/aapt dump badging app/build/outputs/apk/debug/app-debug.apk | grep 'package: name=' | grep 'com.futurethinking.scripttimestampsync'
+          $ANDROID_HOME/build-tools/35.0.0/aapt dump badging app/build/outputs/apk/release/script-timestamp-sync-release.apk | grep 'package: name=' | grep 'com.futurethinking.scripttimestampsync'
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: Script-Timestamp-Sync-APKs
+          name: Script-Timestamp-Sync-FINAL-APKs
           path: |
             app/build/outputs/apk/debug/app-debug.apk
-            app/build/outputs/apk/release/app-release-unsigned.apk
+            app/build/outputs/apk/release/script-timestamp-sync-release.apk
