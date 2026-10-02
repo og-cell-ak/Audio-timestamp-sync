@@ -27,3 +27,6 @@ APK build karne ke liye Android Studio me ye steps follow karo: project open kar
 
 ## Runtime
 Open Settings and enter an OpenAI API key. Choose the PDF and audio, then press Process. The dictionary stays local after installation; Whisper transcription requires internet access.
+
+
+<!-- CI final APK verification trigger -->
